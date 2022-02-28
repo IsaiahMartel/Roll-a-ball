@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
@@ -13,6 +14,12 @@ public class PlayerController : MonoBehaviour
     public float jumpForce = 2.0f;
     private Vector3 jump;
     private bool isGrounded;
+    private bool point1 =false;
+     private bool point2=false;
+      private bool point3=false;
+
+    private int count;
+    public TextMeshProUGUI countText;
 
     //private float movementZ;
 
@@ -20,12 +27,42 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        count=0;
 jump = new Vector3(0.0f, 5.0f, 0.0f);
+SetCountText();
     }
 
-    void OnCollisionStay(){
-        isGrounded = true;
+
+  void OnCollisionStay(Collision other)
+    {
+         isGrounded = true;
+        if (other.gameObject.CompareTag("FinishPlataform")) 
+        {
+         print("FINISHED");
+        }
+
+          if (other.gameObject.CompareTag("Platform1") && isGrounded && !point1) 
+        {
+         print("point1");
+         point1=true;
+         count=count+1;
+         SetCountText();
+        }else if (other.gameObject.CompareTag("Platform2") && isGrounded && !point2) 
+        {
+         print("point2");
+         point2=true;
+           count=count+1;
+          SetCountText();
+        }else if (other.gameObject.CompareTag("Platform3") && isGrounded && !point3) 
+        {
+         print("point3");
+         point3=true;
+          count=count+1;
+          SetCountText();
+        }
+
     }
+  
 
     void OnMove(InputValue movementValue)
     {
@@ -36,6 +73,10 @@ jump = new Vector3(0.0f, 5.0f, 0.0f);
         movementY = movementVector.y;
         //movementZ = movementVector.z;
 
+    }
+
+    void SetCountText(){
+        countText.text = "Count: " + count.ToString();
     }
 
     void FixedUpdate()
@@ -53,6 +94,9 @@ jump = new Vector3(0.0f, 5.0f, 0.0f);
             isGrounded = false;
         }
     }
+
+
+    
 
 
 }
